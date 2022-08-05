@@ -1,4 +1,3 @@
-const { isObjectIdOrHexString } = require('mongoose');
 const mongoose = require('../db/connection');
 const userSchema = new mongoose.Schema({
   username: String,
@@ -12,17 +11,22 @@ const userSchema = new mongoose.Schema({
   }],
   friends: [{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Friends'
+      ref: 'User'
   }],
   messages:[{
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Messages'
+      ref: 'Message'
   }],
   events: [{
-   type: mongoose.Schema.Types.ObjectId,
-   ref:'Events'
- 
-}],
+    location: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'Restaurant'
+    },
+    partcipants: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'User'
+    }],
+  }],
   password: String,
   email: String,
 })
