@@ -20,6 +20,8 @@ app.get('/', (req, res) => {
 });
 
 /// Controllers
+const usersController = require('./controllers/usersController');
+app.use('/users', usersController);
 
 const restaurantsController = require('./controllers/restaurantsController');
 app.use('/restaurants', restaurantsController);
@@ -30,8 +32,6 @@ app.use('/messages', messagesController);
 const reviewsController = require('./controllers/reviewsController');
 app.use('/reviews', reviewsController);
 
-const usersController = require('./controllers/usersController');
-app.use('/users', usersController);
 
 // Error handle
 app.use((err, req, res, next) => {

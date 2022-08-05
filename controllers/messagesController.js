@@ -35,7 +35,7 @@ router.put('/:id', (req, res, next) => {
 // Create
 // POST /messages
 router.post('/', (req, res, next) => {
-   Message.findByIdAndUpdate(req.body)
+   Message.create(req.body)
       .then(message => res.status(201).json(message))
       .catch(next)
 })

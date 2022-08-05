@@ -1,4 +1,6 @@
 const mongoose = require('../db/connection');
+const ObjectId = mongoose.Schema.Types.ObjectId
+
 const userSchema = new mongoose.Schema({
   username: String,
   displayname: String,
@@ -6,24 +8,24 @@ const userSchema = new mongoose.Schema({
   location: String,
   about: String,
   likedrestaurants: [{
-      type: mongoose.Schema.Types.ObjectId,
+      type: ObjectId,
       ref: 'Restaurant'
   }],
   friends: [{
-      type: mongoose.Schema.Types.ObjectId,
+      type: ObjectId,
       ref: 'User'
   }],
   messages:[{
-      type: mongoose.Schema.Types.ObjectId,
+      type: ObjectId,
       ref: 'Message'
   }],
   events: [{
     location: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: ObjectId,
       ref:'Restaurant'
     },
     partcipants: [{
-      type: mongoose.Schema.Types.ObjectId,
+      type: ObjectId,
       ref:'User'
     }],
   }],

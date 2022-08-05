@@ -29,14 +29,14 @@ router.post('/', (req, res, next) => {
 // Update
 // PUT /restaurants/:id
 router.put('/:id', (req, res, next) => {
-  Restaurant.findByIdAndUpdate(req.params.id)
+  Restaurant.findByIdAndUpdate(req.params.id, req.body, { new: true })
   .then((restaurant) => res.json(restaurant))
   .catch(next)
 });
 
 // Delete
 // DELETE /restaurants/:id
-router.delete('/:id', (req, res) => {
+router.delete('/:id', (req, res, next) => {
   Restaurant.findByIdAndDelete(req.params.id)
    .then((restaurant) => res.json(restaurant))
    .catch(next)
