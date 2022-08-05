@@ -2,20 +2,22 @@ const mongoose = require('../db/connection');
  
 const messageSchema = new mongoose.Schema({
    subject: String,
-   to: [{
+   sender: {
        type: mongoose.Schema.Types.ObjectId,
-       href:'Receiver'
-   }],
-   from: [{
+       ref:'User',
+       required: true
+   },
+   recipients: [{
        type: mongoose.Schema.Types.ObjectId,
-       href:'Sender'
+       ref:'User',
+       required: true
    }],
    body: String,
-   timestamps: Boolean,
-})
+},
+   {timestamps: Boolean},
+)
  
 const Message = mongoose.model('Message', messageSchema);
- 
 module.exports = Message;
  
 
