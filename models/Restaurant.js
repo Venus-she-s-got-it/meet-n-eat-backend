@@ -1,11 +1,11 @@
 const mongoose = require('../db/connection')
+const reviewSchema = require('./review')
 
-const RestaurantSchema = new mongoose.Schema({
+const restaurantSchema = new mongoose.Schema({
     name: String,
     image_url: String,
     is_closed: Boolean,
-    url: String,
-    display_phone: String,
+    url: String,    display_phone: String,
     categories: [{
         title: String
     }],
@@ -31,8 +31,9 @@ const RestaurantSchema = new mongoose.Schema({
             end: String,
             day: Number
         }]
-    }]
+    }],
+    reviews: [reviewSchema]
 })
 
-const Restaurant = mongoose.model('Restaruant', RestaurantSchema)
+const Restaurant = mongoose.model('Restaurant', restaurantSchema)
 module.exports = Restaurant
