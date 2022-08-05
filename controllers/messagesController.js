@@ -1,11 +1,14 @@
 const express = require('express')
 const router = express.Router();
 const Message = require('../models/message')
+const User = require('../models/user')
 
 // Index
 // GET /messages
 router.get('/', (req, res, next) => {
     Message.find({})
+      .populate('sender')
+      .populate('recipients')
       .then((message) => res.json(message))
       .catch(next)
 })
@@ -15,6 +18,8 @@ router.get('/', (req, res, next) => {
 // GET /messages/:id
 router.get('/:id', (req, res, next) => {
     Message.findById(req.params.id)
+    .populate('sender')
+    .populate('recipients')
     .then((messages) => res.json(messages))
     .catch(next)
 })
