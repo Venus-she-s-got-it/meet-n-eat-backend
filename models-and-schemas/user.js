@@ -4,7 +4,11 @@ const friendInviteSchema = require('./friendInvite')
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    required: true,
+    unique: true
+  },
   displayname: String,
   profileimg: String,
   location: String,
@@ -29,10 +33,26 @@ const userSchema = new mongoose.Schema({
       // ref:'User'
     }],
   }],
-  password: String,
-  email: String,
+  password: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
 },
-  {timestamps: Boolean}
+{
+  timestamps: true,
+  toJSON: {
+    virtuals: true,
+    transform: (_doc, ret) => {
+      delete ret.password;
+      return ret;
+    },
+  },
+}
 )
 const User = mongoose.model('User', userSchema)
 module.exports = User
