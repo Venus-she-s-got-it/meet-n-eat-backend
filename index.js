@@ -26,9 +26,6 @@ app.use('/users', usersController);
 const restaurantsController = require('./controllers/restaurantsController');
 app.use('/restaurants', restaurantsController);
 
-const reviewsController = require('./controllers/reviewsController');
-app.use('/reviews', reviewsController);
-
 // Error handle
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode || 500;

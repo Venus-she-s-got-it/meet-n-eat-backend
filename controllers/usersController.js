@@ -77,9 +77,9 @@ router.delete('/:id', async (req, res, next) => {
 // Friend Invites
 // ========================================================================================================
 
-// Add friend invite
-// PUT /users/:userId/friendInvites
-router.put('/:userId/friendInvites', (req, res, next) => {
+// Create friend invite
+// POST /users/:userId/friendInvites
+router.post('/:userId/friendInvites', (req, res, next) => {
     User.findById(req.params.userId)
         .then(user => {
             user.friendinvites.push(req.body)
@@ -100,9 +100,9 @@ router.put('/:userId/friendInvites', (req, res, next) => {
 // Friends
 // ========================================================================================================
 
-// Add friend
-// PUT /users/:userId/friends/:friendId
-router.put('/:userId/friends/:friendId', (req, res, next) => {
+// Create friend
+// POST /users/:userId/friends/:friendId
+router.post('/:userId/friends/:friendId', (req, res, next) => {
     User.findByIdAndUpdate(req.params.userId, { $push: { friends: req.params.friendId }}, { new: true })
         .then(user => {
             User.findByIdAndUpdate(req.params.friendId, { $push: { friends: req.params.userId }}, { new: true })
@@ -125,9 +125,9 @@ router.delete('/:userId/friends/:friendId', (req, res, next) => {
 // Liked Restaurants
 // ========================================================================================================
 
-// Add Liked Restaurant
-// PUT /users/:userId/likedrestaurants/:restaurantId
-router.put('/:userId/likedrestaurants/:restaurantId', (req, res, next) => {
+// Create Liked Restaurant
+// POST /users/:userId/likedrestaurants/:restaurantId
+router.post('/:userId/likedrestaurants/:restaurantId', (req, res, next) => {
     User.findByIdAndUpdate(req.params.userId, { $push: { likedrestaurants: req.params.restaurantId }}, { new: true })
         .then(newLikedRestaurants => res.json(newLikedRestaurants))
         .catch(next)
@@ -144,7 +144,7 @@ router.delete('/:userId/likedrestaurants/:restaurantId', (req, res, next) => {
 // Messages
 // ========================================================================================================
 
-// Get by User ID
+// Get message by User ID
 // GET /users/:userId/messages
 router.get('/:userId/messages', (req, res, next) => {
     User.findById(req.params.userId)
@@ -153,9 +153,9 @@ router.get('/:userId/messages', (req, res, next) => {
         .catch(next)
 })
 
-// Create
-// PUT /users/:recipientId/messages
-router.put('/:recipientId/messages', (req, res, next) => {
+// Create message
+// POST /users/:recipientId/messages
+router.post('/:recipientId/messages', (req, res, next) => {
     User.findById(req.params.recipientId)
        .then(user => {
          user.messages.push(req.body)
@@ -165,7 +165,7 @@ router.put('/:recipientId/messages', (req, res, next) => {
        .catch(next)
  })
  
-// Delete
+// Delete message
 // DELETE /users/:userId/messages/:messageId
 router.delete('/:userId/messages/:messageId', (req, res, next) => {
     User.findByIdAndUpdate(req.params.userId, { $pull: { messages: { _id: req.params.messageId }}}, { new: true })
@@ -176,9 +176,9 @@ router.delete('/:userId/messages/:messageId', (req, res, next) => {
  // Events
 // ========================================================================================================
 
-// Add event
-// PUT /users/events/sender/:senderId/restaurant/:restaurantId
-router.put('/events/sender/:senderId/restaurant/:restaurantId', (req, res, next) => {
+// Create event
+// POST /users/events/sender/:senderId/restaurant/:restaurantId
+router.post('/events/sender/:senderId/restaurant/:restaurantId', (req, res, next) => {
     User.findByIdAndUpdate(req.params.senderId, { $push: { events: {restaurant: req.params.restaurantId, participants: req.body.participants }}}, { new: true })
        .then(user => {
             console.log(req.body.participants)

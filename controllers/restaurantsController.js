@@ -57,4 +57,25 @@ router.get('/:restaurantId/reviews', (req, res, next) => {
     .catch(next)
 })
 
+// Create a Review
+// POST /restaurants/:restaurantId/reviews
+router.post('/:restaurantId/reviews', async (req, res, next) => {
+  try {
+      const restaurant = await Restaurant.findById(req.params.restaurantId)
+      restaurant.reviews.push(req.body)
+      await restaurant.save()
+      res.json(restaurant.reviews)
+  } catch(err) {
+      next(err)
+  }
+})
+
+// Delete a Review
+// DELETE /restaurants/:restaurantId/reviews/:reviewId
+router.delete('/:restaurantId/reviews/:reviewId', (req, res, next) => {
+  Restaurant.findByIdAndUpdate(req.params.restaurantId, { $pull: { reviews: { _id: req.params.reviewId }}}, { new: true })
+    .then(restaurant => res.json(restaurant.reviews))
+    .catch(next)
+})
+
 module.exports = router;
