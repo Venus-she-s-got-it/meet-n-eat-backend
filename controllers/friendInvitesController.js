@@ -16,8 +16,8 @@ router.put('/:userId', (req, res, next) => {
 
 // Delete friend invite
 // DELETE /friendinvites/:inviteId/user/:userId
-router.put('/:senderId/user/:userId', (req, res, next) => {
-   User.findByIdAndUpdate(req.params.userId, { $pullAll: { friendinvites: [{ sender: req.params.senderId}]}}, { new: true })
+router.delete('/:senderId/user/:userId', (req, res, next) => {
+   User.findByIdAndUpdate(req.params.userId, { $pull: { friendinvites: { sender: req.params.senderId}}}, { new: true })
       .then(user => res.json(user))
       .catch(next)
 })
