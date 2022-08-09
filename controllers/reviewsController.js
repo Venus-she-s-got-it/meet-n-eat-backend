@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router();
-const Restaurant = require('../models/restaurant')
+const Restaurant = require('../models-and-schemas/restaurant')
 
 //GET - index
 router.get('/', async (req, res, next) => {

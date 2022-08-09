@@ -17,7 +17,6 @@ const messageSchema = new mongoose.Schema({
    {timestamps: Boolean},
 )
  
-
 module.exports = messageSchema;
  
 

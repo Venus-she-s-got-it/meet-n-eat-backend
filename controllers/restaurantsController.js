@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const Restaurant = require('../models/restaurant');
+const Restaurant = require('../models-and-schemas/restaurant');
+
+// Restaurant CRUD
+// ========================================================================================================
 
 // Index
 // GET /restaurants
@@ -22,7 +25,7 @@ router.get('/:id', (req, res, next) => {
 // POST /restaurants
 router.post('/', (req, res, next) => {
   Restaurant.create(req.body)
-    .then((restaurants) => res.status(201).json(restaurants))
+    .then((restaurant) => res.status(201).json(restaurant))
     .catch(next);
 });
 
@@ -41,5 +44,17 @@ router.delete('/:id', (req, res, next) => {
    .then((restaurant) => res.json(restaurant))
    .catch(next)
 });
+
+// Reviews
+// ========================================================================================================
+
+// Get by Restaurant ID
+// GET /restaurants/:restaurantId/reviews
+router.get('/:restaurantId/reviews', (req, res, next) => {
+  Restaurant.findById(req.params.restaurantId)
+    .select('reviews')
+    .then(reviews => res.json(reviews))
+    .catch(next)
+})
 
 module.exports = router;
