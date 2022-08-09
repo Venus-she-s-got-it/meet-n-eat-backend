@@ -1,4 +1,5 @@
 const mongoose = require('../db/connection');
+const messageSchema = require('./message');
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const userSchema = new mongoose.Schema({
@@ -15,10 +16,7 @@ const userSchema = new mongoose.Schema({
       type: ObjectId,
       ref: 'User'
   }],
-  messages:[{
-      type: ObjectId,
-      ref: 'Message'
-  }],
+  messages:[messageSchema],
   events: [{
     location: {
       type: ObjectId,
