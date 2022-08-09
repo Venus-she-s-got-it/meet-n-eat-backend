@@ -61,6 +61,22 @@ router.put('/:id', async (req, res, next) => {
     }
 })
 
+// Add Liked Restaurant
+// PUT /users/:userId/addLikedRestaurants/:restaurantId
+router.put('/:userId/addLikedRestaurants/:restaurantId', (req, res, next) => {
+    User.findByIdAndUpdate(req.params.userId, { $push: { likedrestaurants: req.params.restaurantId }}, { new: true })
+        .then(newLikedRestaurants => res.json(newLikedRestaurants))
+        .catch(next)
+})
+
+// Remove Liked Restaurant
+// PUT /users/:userId/removeLikedRestaurant/:restaurantId
+router.put('/:userId/removeLikedRestaurant/:restaurantId', (req, res, next) => {
+    User.findByIdAndUpdate(req.params.userId, { $pullAll: { likedrestaurants: [req.params.restaurantId] }}, { new: true })
+        .then(newLikedRestaurants => res.json(newLikedRestaurants))
+        .catch(next)
+})
+
 // Delete
 // DELETE /users/:id
 router.delete('/:id', async (req, res, next) => {

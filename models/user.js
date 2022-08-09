@@ -1,4 +1,6 @@
 const mongoose = require('../db/connection');
+const messageSchema = require('./message');
+const friendInviteSchema = require('../models/friendInvite')
 const ObjectId = mongoose.Schema.Types.ObjectId
 
 const userSchema = new mongoose.Schema({
@@ -15,10 +17,8 @@ const userSchema = new mongoose.Schema({
       type: ObjectId,
       ref: 'User'
   }],
-  messages:[{
-      type: ObjectId,
-      ref: 'Message'
-  }],
+  friendinvites: [friendInviteSchema],
+  messages:[messageSchema],
   events: [{
     location: {
       type: ObjectId,
@@ -31,7 +31,9 @@ const userSchema = new mongoose.Schema({
   }],
   password: String,
   email: String,
-})
+},
+  {timestamps: Boolean}
+)
 const User = mongoose.model('User', userSchema)
 module.exports = User
  

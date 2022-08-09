@@ -1,12 +1,11 @@
 const express = require('express')
 const router = express.Router();
-const Message = require('../models/message')
 const User = require('../models/user')
 
 // Index
 // GET /messages
 router.get('/', (req, res, next) => {
-    Message.find({})
+    User.find({})
       .populate('sender')
       .populate('recipients')
       .then((message) => res.json(message))
@@ -17,7 +16,7 @@ router.get('/', (req, res, next) => {
 // Show
 // GET /messages/:id
 router.get('/:id', (req, res, next) => {
-    Message.findById(req.params.id)
+    User.findById(req.params.id)
     .populate('sender')
     .populate('recipients')
     .then((messages) => res.json(messages))
@@ -27,7 +26,7 @@ router.get('/:id', (req, res, next) => {
 // Update
 // PUT /messages/:id
 router.put('/:id', (req, res, next) => {
-    Message.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
+    User.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
     .then(messages => res.json(messages))
     .catch(next)
 })
@@ -35,7 +34,7 @@ router.put('/:id', (req, res, next) => {
 // Create
 // POST /messages
 router.post('/', (req, res, next) => {
-   Message.create(req.body)
+   User.create(req.body)
       .then(message => res.status(201).json(message))
       .catch(next)
 })
@@ -43,7 +42,7 @@ router.post('/', (req, res, next) => {
 // Delete
 // DELETE /messages/:id
 router.delete('/:id', (req, res, next) => {
-   Message.findByIdAndDelete(req.params.id)
+   User.findByIdAndDelete(req.params.id)
       .then(message => res.json(message))
       .catch(next)
 })
