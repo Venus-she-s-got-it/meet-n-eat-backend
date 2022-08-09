@@ -42,7 +42,7 @@ router.post('/', (req, res, next) => {
 // Delete
 // DELETE /messages/:id
 router.delete('/:id', (req, res, next) => {
-   Message.findByIdAndDelete(req.params.id)
+   User.findByIdAndDelete(req.params.id)
       .then(message => res.json(message))
       .catch(next)
 })

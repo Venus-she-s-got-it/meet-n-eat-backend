@@ -32,6 +32,8 @@ app.use('/messages', messagesController);
 const reviewsController = require('./controllers/reviewsController');
 app.use('/reviews', reviewsController);
 
+const friendInvitesController = require('./controllers/friendInvitesController');
+app.use('/friendinvites', friendInvitesController)
 
 // Error handle
 app.use((err, req, res, next) => {

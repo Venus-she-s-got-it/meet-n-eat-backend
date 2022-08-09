@@ -26,13 +26,15 @@ router.get('/:id', async (req, res, next) => {
 })
 
 // POST - create
-
-router.post('/', async (req, res, next) => {
+// PUT /reviews/:restaurantId
+router.post('/:restaurantId', async (req, res, next) => {
     try {
-        const newReview = await Restaurant.create(req.body)
-        res.json(newReview)
+        const restaurant = await Restaurant.findById(req.params.restaurantId)
+        restaurant.reviews.push(req.body)
+        await restaurant.save()
+        res.json(restaurant)
     } catch(err) {
-        next
+        next(err)
     }
 })
 
