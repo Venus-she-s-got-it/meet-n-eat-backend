@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Restaurant = require('../models-and-schemas/restaurant');
 const { requireToken } = require('../middleware/auth')
+const searchBuilder = require('../middleware/searchBuilder')
 
 // Restaurant CRUD
 // ========================================================================================================
@@ -50,11 +51,15 @@ router.delete('/:id', requireToken, (req, res, next) => {
 // ========================================================================================================
 
 // Get based on query parameters
-// GET /restaurants/:searchString
-router.get('/:searchString', requireToken, (req, res, next) => {
-  console.log(req.query)
+// GET /restaurants/results/:searchString
+router.get('/results/:searchString', requireToken, (req, res, next) => {
+  const queryParams = searchBuilder(req.query)
+  console.log("- queryParams", queryParams)
+  Restaurant.find({ $and: [{ $or: [{ name: { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}, { 'categories.title': { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}]}, { $and: queryParams }]})
+    .then(restaurants => res.json(restaurants))
+    .catch(next)
 })
-
+// 
 // Reviews
 // ========================================================================================================
 
