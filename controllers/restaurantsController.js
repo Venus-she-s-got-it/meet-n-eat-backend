@@ -46,6 +46,15 @@ router.delete('/:id', requireToken, (req, res, next) => {
    .catch(next)
 });
 
+// Search Results
+// ========================================================================================================
+
+// Get based on query parameters
+// GET /restaurants/:searchString
+router.get('/:searchString', requireToken, (req, res, next) => {
+  console.log(req.query)
+})
+
 // Reviews
 // ========================================================================================================
 
