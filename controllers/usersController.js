@@ -18,11 +18,27 @@ router.get('/', requireToken, async (req, res, next) => {
     }
 })
 
-// Show
+// Get user by ID
 // GET /users/:id
 router.get('/:id', requireToken, async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id)
+        .populate('likedrestaurants')
+        .populate('friends')
+        .populate('messages')
+        .populate('events.restaurant')
+        .populate('events.participants')
+        res.json(user)
+    } catch(err) {
+        next(err)
+    }
+})
+
+// Get user by username
+// GET /users/username/:username
+router.get('/username/:username', requireToken, async (req, res, next) => {
+    try {
+        const user = await User.findOne({ username: req.params.username })
         .populate('likedrestaurants')
         .populate('friends')
         .populate('messages')
