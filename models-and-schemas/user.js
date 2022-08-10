@@ -1,5 +1,5 @@
-const mongoose = require('../db/connection');
-const messageSchema = require('./message');
+const mongoose = require('../db/connection')
+const messageSchema = require('./message')
 const friendInviteSchema = require('./friendInvite')
 const ObjectId = mongoose.Schema.Types.ObjectId
 
@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
     },
     participants: [{
       type: ObjectId,
-      // ref:'User'
+      ref:'User'
     }],
   }],
   password: {
