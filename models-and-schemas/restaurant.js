@@ -32,7 +32,7 @@ const restaurantSchema = new mongoose.Schema({
             day: Number
         }]
     }],
-    reviews: [reviewSchema]
+    reviews: [reviewSchema],
 })
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema)

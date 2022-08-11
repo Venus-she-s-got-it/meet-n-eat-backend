@@ -157,6 +157,7 @@ router.post('/:userId/likedrestaurants/:restaurantId', requireToken, (req, res, 
     User.findByIdAndUpdate(req.params.userId, { $push: { likedrestaurants: req.params.restaurantId }}, { new: true })
         .then(newLikedRestaurants => res.json(newLikedRestaurants))
         .catch(next)
+        console.log('liked restaurant added')
 })
 
 // Delete Liked Restaurant
@@ -212,6 +213,7 @@ router.post('/events/sender/:senderId/restaurant/:restaurantId', requireToken, (
             res.json(user)
        })
        .catch(next)
+       console.log('event created')
  })
 
 // Delete event

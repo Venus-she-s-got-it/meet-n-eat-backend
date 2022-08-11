@@ -54,9 +54,22 @@ router.delete('/:id', requireToken, (req, res, next) => {
 // GET /restaurants/results/:searchString
 router.get('/results/:searchString', requireToken, (req, res, next) => {
   const queryParams = searchBuilder(req.query)
-  Restaurant.find({ $and: [{ $or: [{ name: { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}, { 'categories.title': { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}]}, { $and: queryParams }]})
+  console.log("- req.query", req.query)
+  console.log("- req.params.searchString", req.params.searchString)
+  if(req.params.searchString === 'no-search-string') {
+    Restaurant.find({ $and :queryParams })
+      .then(restaurants => res.json(restaurants))
+      .catch(next)
+  } else if(Object.keys(req.query).length === 0) {
+    Restaurant.find({ $or: [{ name: { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}, { 'categories.title': { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}]})
     .then(restaurants => res.json(restaurants))
     .catch(next)
+  } else {
+    Restaurant.find({ $and: [{ $or: [{ name: { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}, { 'categories.title': { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}]}, { $and: queryParams }]})
+      .then(restaurants => res.json(restaurants))
+      .catch(next)
+  }
+
 })
 // 
 // Reviews

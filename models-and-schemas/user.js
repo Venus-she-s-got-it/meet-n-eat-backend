@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema({
       type: ObjectId,
       ref:'User'
     }],
+    date: Date
   }],
   password: {
     type: String,
