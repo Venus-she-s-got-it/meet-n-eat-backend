@@ -76,6 +76,7 @@ router.post('/signin', (req, res, next) => {
 // Update
 // PUT /users/:id
 router.put('/:id', requireToken, async (req, res, next) => {
+    console.log('get user by ID')
     try {
         const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {new: true})
         if (updatedUser) {
@@ -164,6 +165,7 @@ router.delete('/:userId/likedrestaurants/:restaurantId', requireToken, (req, res
     User.findByIdAndUpdate(req.params.userId, { $pullAll: { likedrestaurants: [req.params.restaurantId] }}, { new: true })
         .then(newLikedRestaurants => res.json(newLikedRestaurants))
         .catch(next)
+    console.log('deleted liked restaurant')
 })
 
 // Messages

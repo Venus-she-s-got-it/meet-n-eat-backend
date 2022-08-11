@@ -69,6 +69,7 @@ router.get('/:restaurantId/reviews', requireToken, (req, res, next) => {
     .select('reviews')
     .then(reviews => res.json(reviews))
     .catch(next)
+    console.log('got restaurant reviews')
 })
 
 // Create a Review
@@ -81,6 +82,7 @@ router.post('/:restaurantId/reviews', requireToken, (req, res, next) => {
         res.json(restaurant.reviews)
       })
       .catch(next)
+      console.log('review created')
 })
 
 // Delete a Review
