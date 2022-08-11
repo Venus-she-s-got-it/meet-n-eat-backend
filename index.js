@@ -1,4 +1,3 @@
-// MAKE SURE YOU HAVE RUN npm i express mongoose dotenv
 // Basic config
 
 const express = require('express');
@@ -9,9 +8,9 @@ const cors = require('cors');
 
 // Middleware
 
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
 
 // ROUTES
 /// Redirect

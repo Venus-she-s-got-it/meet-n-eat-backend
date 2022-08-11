@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const Restaurant = require('../models-and-schemas/restaurant');
+const { requireToken } = require('../middleware/auth')
+const searchBuilder = require('../middleware/searchBuilder')
 
 // Restaurant CRUD
 // ========================================================================================================
 
 // Index
 // GET /restaurants
-router.get('/', (req, res, next) => {
+router.get('/', requireToken, (req, res, next) => {
   Restaurant.find({})
     .then((restaurants) => res.json(restaurants))
     .catch(next);
@@ -15,7 +17,7 @@ router.get('/', (req, res, next) => {
 
 // Show
 // GET /restaurants/:id
-router.get('/:id', (req, res, next) => {
+router.get('/:id', requireToken, (req, res, next) => {
   Restaurant.findById(req.params.id)
     .then((restaurants) => res.json(restaurants))
     .catch(next);
@@ -23,7 +25,7 @@ router.get('/:id', (req, res, next) => {
 
 // Create
 // POST /restaurants
-router.post('/', (req, res, next) => {
+router.post('/', requireToken, (req, res, next) => {
   Restaurant.create(req.body)
     .then((restaurant) => res.status(201).json(restaurant))
     .catch(next);
@@ -31,7 +33,7 @@ router.post('/', (req, res, next) => {
 
 // Update
 // PUT /restaurants/:id
-router.put('/:id', (req, res, next) => {
+router.put('/:id', requireToken, (req, res, next) => {
   Restaurant.findByIdAndUpdate(req.params.id, req.body, { new: true })
   .then((restaurant) => res.json(restaurant))
   .catch(next)
@@ -39,40 +41,66 @@ router.put('/:id', (req, res, next) => {
 
 // Delete
 // DELETE /restaurants/:id
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', requireToken, (req, res, next) => {
   Restaurant.findByIdAndDelete(req.params.id)
    .then((restaurant) => res.json(restaurant))
    .catch(next)
 });
 
+// Search Results
+// ========================================================================================================
+
+// Get based on query parameters
+// GET /restaurants/results/:searchString
+router.get('/results/:searchString', requireToken, (req, res, next) => {
+  const queryParams = searchBuilder(req.query)
+  console.log("- req.query", req.query)
+  console.log("- req.params.searchString", req.params.searchString)
+  if(req.params.searchString === 'no-search-string') {
+    Restaurant.find({ $and :queryParams })
+      .then(restaurants => res.json(restaurants))
+      .catch(next)
+  } else if(Object.keys(req.query).length === 0) {
+    Restaurant.find({ $or: [{ name: { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}, { 'categories.title': { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}]})
+    .then(restaurants => res.json(restaurants))
+    .catch(next)
+  } else {
+    Restaurant.find({ $and: [{ $or: [{ name: { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}, { 'categories.title': { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}]}, { $and: queryParams }]})
+      .then(restaurants => res.json(restaurants))
+      .catch(next)
+  }
+
+})
+// 
 // Reviews
 // ========================================================================================================
 
 // Get by Restaurant ID
 // GET /restaurants/:restaurantId/reviews
-router.get('/:restaurantId/reviews', (req, res, next) => {
+router.get('/:restaurantId/reviews', requireToken, (req, res, next) => {
   Restaurant.findById(req.params.restaurantId)
     .select('reviews')
     .then(reviews => res.json(reviews))
     .catch(next)
+    console.log('got restaurant reviews')
 })
 
 // Create a Review
 // POST /restaurants/:restaurantId/reviews
-router.post('/:restaurantId/reviews', async (req, res, next) => {
-  try {
-      const restaurant = await Restaurant.findById(req.params.restaurantId)
-      restaurant.reviews.push(req.body)
-      await restaurant.save()
-      res.json(restaurant.reviews)
-  } catch(err) {
-      next(err)
-  }
+router.post('/:restaurantId/reviews', requireToken, (req, res, next) => {
+  Restaurant.findById(req.params.restaurantId)
+      .then(restaurant => {
+        restaurant.reviews.push(req.body)
+        restaurant.save()
+        res.json(restaurant.reviews)
+      })
+      .catch(next)
+      console.log('review created')
 })
 
 // Delete a Review
 // DELETE /restaurants/:restaurantId/reviews/:reviewId
-router.delete('/:restaurantId/reviews/:reviewId', (req, res, next) => {
+router.delete('/:restaurantId/reviews/:reviewId', requireToken, (req, res, next) => {
   Restaurant.findByIdAndUpdate(req.params.restaurantId, { $pull: { reviews: { _id: req.params.reviewId }}}, { new: true })
     .then(restaurant => res.json(restaurant.reviews))
     .catch(next)
