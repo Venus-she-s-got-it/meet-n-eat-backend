@@ -8,5 +8,8 @@
     "mongoose": "^6.5.1",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }

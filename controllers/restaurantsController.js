@@ -53,25 +53,47 @@ router.delete('/:id', requireToken, (req, res, next) => {
 // Get based on query parameters
 // GET /restaurants/results/:searchString
 router.get('/results/:searchString', requireToken, (req, res, next) => {
-  const queryParams = searchBuilder(req.query)
-  console.log("- req.query", req.query)
-  console.log("- req.params.searchString", req.params.searchString)
-  if(req.params.searchString === 'no-search-string') {
-    Restaurant.find({ $and :queryParams })
-      .then(restaurants => res.json(restaurants))
-      .catch(next)
-  } else if(Object.keys(req.query).length === 0) {
-    Restaurant.find({ $or: [{ name: { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}, { 'categories.title': { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}]})
+  const queryParamsRegEx = searchBuilder(req.query)
+  const searchStringRegEx = { $regex: '.*' + req.params.searchString + '.*', $options: 'i' }
+
+  // Determine whether search string, filters, or both were sent
+  // ===========================================================
+
+  // Only search string
+  if(Object.keys(req.query).length === 0) {
+    Restaurant.find({ 
+      $or: [
+        { name: searchStringRegEx }, 
+        { 'categories.title': searchStringRegEx }
+      ]
+    })
     .then(restaurants => res.json(restaurants))
     .catch(next)
+  // Only filters
+  } else if(req.params.searchString === 'no-search-string') {
+    Restaurant.find({ 
+      $and: queryParamsRegEx 
+    })
+    .then(restaurants => res.json(restaurants))
+    .catch(next)
+  // Both search string and filters
   } else {
-    Restaurant.find({ $and: [{ $or: [{ name: { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}, { 'categories.title': { $regex: '.*'+req.params.searchString+'.*', $options: 'i' }}]}, { $and: queryParams }]})
-      .then(restaurants => res.json(restaurants))
-      .catch(next)
+    Restaurant.find({ 
+      $and: [
+        { $or: [
+            { name: searchStringRegEx }, 
+            { 'categories.title': searchStringRegEx }
+          ]
+        }, 
+        { $and: queryParamsRegEx }
+      ]
+    })
+    .then(restaurants => res.json(restaurants))
+    .catch(next)
   }
 
 })
-// 
+
 // Reviews
 // ========================================================================================================
 
